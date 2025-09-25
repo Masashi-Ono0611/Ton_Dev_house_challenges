@@ -172,4 +172,5 @@ To submit, fill the form given below
 
 **Happy coding and may the best developer win! 🚀**
 
-hello
+Check the docs for more information:
+/Ton_Dev_house_challenges/docs
