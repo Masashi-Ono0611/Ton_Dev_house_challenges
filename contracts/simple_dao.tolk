@@ -25,7 +25,7 @@
     There will be 1 getter function :
     - getVotes : This function is used to get the votes. (yesVotes, noVotes, totalVotes)
 
-    Helpful Blueprint sdk commands:
+    helpful Blueprint sdk commands:
     - npx blueprint build - To build the contract
     - npx blueprint test tests/SimpleDao.spec.ts - To test the contract
 */
@@ -33,7 +33,7 @@
 tolk 1.1
 
 // Simple DAO contract implemented in Tolk
-// Storage layout must match wrappers/SimpleDao.ts (queryId, yesVotes, noVotes, totalVotes)
+// Storage layout must match wrappers/SimpleDao.ts (queryId, yesVotes, noVotes, totalVotes, admin)
 // Uses auto-packing and lazy loading per Tolk language guide
 
 struct Storage {
@@ -41,6 +41,7 @@ struct Storage {
     yesVotes: uint32
     noVotes: uint32
     totalVotes: uint32
+    admin: address
 }
 
 fun Storage.load(): Storage {
@@ -80,6 +81,8 @@ fun onInternalMessage(in: InMessage) {
 
     if (op == OP_RESET_VOTES) {
         val qid = b.loadUint(32) as uint32;
+        // Only admin can reset the counters
+        assert (in.senderAddress == st.admin) throw 401;
         st.queryId = qid;
         st.yesVotes = 0;
         st.noVotes = 0;
