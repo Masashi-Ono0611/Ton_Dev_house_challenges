@@ -3,9 +3,12 @@ import { SimpleDao } from '../wrappers/SimpleDao';
 import { compile, NetworkProvider } from '@ton/blueprint';
 
 export async function run(provider: NetworkProvider) {
-    const ui = provider.ui();
-    const adminInput = process.env.ADMIN_ADDRESS ?? (await ui.input('Enter ADMIN_ADDRESS (EQ... / kQ...):'));
-    const admin = Address.parse(adminInput);
+    // Auto-set admin to the wallet used to deploy
+    const sender = provider.sender() as any;
+    const admin: Address | undefined = sender.address as Address | undefined;
+    if (!admin) {
+        throw new Error('Sender address is not available. Please ensure your wallet is connected.');
+    }
 
     const simpleDao = provider.open(
         SimpleDao.createFromConfig(
