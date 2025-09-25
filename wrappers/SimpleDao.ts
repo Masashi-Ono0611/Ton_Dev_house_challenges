@@ -2,6 +2,7 @@ import { Address, beginCell, Cell, Contract, contractAddress, ContractProvider, 
 
 export type SimpleDaoConfig = {
     queryId: number;
+    admin: Address;
 };
 
 export function simpleDaoConfigToCell(config: SimpleDaoConfig): Cell {
@@ -10,6 +11,7 @@ export function simpleDaoConfigToCell(config: SimpleDaoConfig): Cell {
         .storeUint(0, 32) // yesVotes
         .storeUint(0, 32) // noVotes
         .storeUint(0, 32) // totalVotes
+        .storeAddress(config.admin) // admin
         .endCell();
 }
 

@@ -18,11 +18,13 @@ describe('SimpleDao', () => {
     beforeEach(async () => {
         blockchain = await Blockchain.create();
 
-        simpleDao = blockchain.openContract(SimpleDao.createFromConfig({
-            queryId:0
-        }, code));
-
+        // Create admin (deployer) first to pass its address in config
         deployer = await blockchain.treasury('deployer');
+
+        simpleDao = blockchain.openContract(SimpleDao.createFromConfig({
+            queryId: 0,
+            admin: deployer.address,
+        }, code));
 
         const deployResult = await simpleDao.sendDeploy(deployer.getSender(), toNano('0.1'));
 
